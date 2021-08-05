@@ -31,7 +31,7 @@ PlasmaCore.ColorScope {
         function onFailed() {
             if (root.interfaceVersion >= 3) {
                 mainBlock.visibleScreen = MainBlock.VisibleScreen.BlankScreen;
-                authenticator.tryUnlock()
+                graceLockTimer.restart();
                 notificationRemoveTimer.restart();
             }
 
@@ -167,6 +167,13 @@ PlasmaCore.ColorScope {
             interval: 3000
             onTriggered: {
                 root.notification = "";
+            }
+        }
+        Timer {
+            id: graceLockTimer
+            interval: 3000
+            onTriggered: {
+                authenticator.tryUnlock();
             }
         }
 
